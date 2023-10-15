@@ -1,38 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slap Countdown</title>
-    <style>
-        body {
-            font-family: 'Courier New', monospace;
-            background-image: url('bg.png');
-            background-size: cover;
-            background-position: center;
-            color: rgb(255, 255, 255);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        h1 {
-            font-size: 2em;
-            font-family: 'Courier New', monospace;
-            margin-bottom: 20px;
-        }
-
-        .countdown {
-            font-size: 4em;
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 20px #00f, 0 0 40px #00f, 0 0 60px #00f;
-        }
-    </style>
+    <!-- ... your existing code ... -->
 </head>
 <body>
     <h1>Slap countdown</h1>
@@ -46,11 +15,11 @@
         let targetDate;
 
         if (storedTargetDate) {
-            targetDate = new Date(storedTargetDate).getTime();
+            targetDate = parseInt(storedTargetDate); // Parse the stored timestamp
         } else {
             // Set the target date (Oct 17, 2023 12:20 PM)
             targetDate = new Date('2023-10-17T12:20:00').getTime();
-            localStorage.setItem('targetDate', targetDate);
+            localStorage.setItem('targetDate', targetDate); // Store the timestamp
         }
 
         // Function to update the countdown

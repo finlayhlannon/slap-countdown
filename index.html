@@ -41,38 +41,62 @@
     </div>
 
     <script>
-        // Retrieve the target date from localStorage if it exists
-        let storedTargetDate = localStorage.getItem('targetDate');
-        let targetDate;
-
-        if (storedTargetDate) {
-            targetDate = new Date(storedTargetDate).getTime();
-        } else {
-            // Set the target date (Oct 17, 2023 12:20 PM)
-            targetDate = new Date('2023-10-17T12:20:00').getTime();
-            localStorage.setItem('targetDate', targetDate);
-        }
-
-        // Function to update the countdown
-        function updateCountdown() {
-            const currentDate = new Date().getTime();
-            const timeLeft = targetDate - currentDate;
-
-            if (timeLeft <= 0) {
-                document.getElementById("countdown").innerHTML = "SLAP TIME!";
-            } else {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-                document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        // Function to retrieve the target date from the server
+        async function getTargetDateFromServer() {
+            try {
+                const response = await fetch('http://your-server-url/api/target-date');
+                const data = await response.json();
+                return data.targetDate;
+            } catch (error) {
+                console.error(error);
+                return null;
             }
         }
 
-        // Update the countdown every second
-        setInterval(updateCountdown, 1000);
-        updateCountdown(); // Initial call to display the countdown immediately
+        // Function to set the target date on the server
+        async function setTargetDateOnServer(targetDate) {
+            try {
+                const response = await fetch('http://your-server-url/api/target-date', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ targetDate })
+                });
+                const data = await response.json();
+                return data.success;
+            } catch (error) {
+                console.error(error);
+                return false;
+            }
+        }
+
+        // Function to initialize the target date
+        async function initializeTargetDate() {
+            let targetDate = await getTargetDateFromServer();
+
+            if (!targetDate) {
+                // Set the target date (Oct 17, 2023 12:20 PM)
+                const initialTargetDate = new Date('2023-10-17T12:20:00').getTime();
+                await setTargetDateOnServer(initialTargetDate);
+                targetDate = initialTargetDate;
+            }
+
+            return targetDate;
+        }
+
+        // The rest of your code remains the same
+        // ...
+
+        // Initialize the countdown
+        async function initializeCountdown() {
+            targetDate = await initializeTargetDate();
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        }
+
+        // Call the initialization function
+        initializeCountdown();
     </script>
 </body>
 </html>

@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Slap </h1>
+    <h1>Slap</h1>
     <div class="countdown-container">
         <div class="countdown" id="countdown"></div>
     </div>
@@ -44,7 +44,7 @@
         // Function to retrieve the target date from the server
         async function getTargetDateFromServer() {
             try {
-                const response = await fetch('http://your-server-url/api/target-date');
+                const response = await fetch('https://slapcountdown.vercel.app/api/target-date');
                 const data = await response.json();
                 return data.targetDate;
             } catch (error) {
@@ -56,7 +56,7 @@
         // Function to set the target date on the server
         async function setTargetDateOnServer(targetDate) {
             try {
-                const response = await fetch('http://your-server-url/api/target-date', {
+                const response = await fetch('https://slapcountdown.vercel.app/api/target-date', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -85,8 +85,22 @@
             return targetDate;
         }
 
-        // The rest of your code remains the same
-        // ...
+        // Function to update the countdown
+        function updateCountdown() {
+            const currentDate = new Date().getTime();
+            const timeLeft = targetDate - currentDate;
+
+            if (timeLeft <= 0) {
+                document.getElementById("countdown").innerHTML = "SLAP TIME!";
+            } else {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+        }
 
         // Initialize the countdown
         async function initializeCountdown() {
